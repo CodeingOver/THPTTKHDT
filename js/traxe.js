@@ -194,9 +194,9 @@ function calculateFee() {
     const diffMs = returnState.rentalEndTime - returnState.rentalStartTime;
     returnState.duration = Math.floor(diffMs / (1000 * 60));
 
-    // Calculate base fee (5,000đ per hour)
+    // Calculate base fee (2,000đ per hour)
     const hours = Math.ceil(returnState.duration / 60);
-    returnState.baseFee = hours * 5000;
+    returnState.baseFee = hours * 2000;
 
     // Apply minimum fee if less than 1 hour
     const isUnderOneHour = returnState.duration < 60;
