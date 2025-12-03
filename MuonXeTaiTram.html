@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mượn Xe Tại Trạm</title>
+    <link rel="stylesheet" href="css/muonxe.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <div class="header">
+                <div class="header-icon">🚲</div>
+                <div class="header-info">
+                    <h1>Mượn Xe Tại Trạm</h1>
+                    <div class="station-name">Trạm Nguyễn Huệ</div>
+                </div>
+            </div>
+
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step-item active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Chọn xe</div>
+                </div>
+                <div class="step-item" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Quét thẻ</div>
+                </div>
+                <div class="step-item" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Lấy xe</div>
+                </div>
+            </div>
+
+            <!-- Alerts -->
+            <div class="alert alert-error" id="alertError">
+                <strong>⚠️ Lỗi:</strong> <span id="errorMessage"></span>
+            </div>
+
+            <div class="alert alert-warning" id="alertWarning">
+                <strong>⚠️ Cảnh báo:</strong> <span id="warningMessage"></span>
+            </div>
+
+            <div class="alert alert-info" id="alertInfo">
+                <strong>ℹ️ Thông báo:</strong> <span id="infoMessage"></span>
+            </div>
+
+            <div class="alert alert-success" id="alertSuccess">
+                <strong>✓ Thành công:</strong> <span id="successMessage"></span>
+            </div>
+
+            <!-- Step 1: Select Bike -->
+            <div class="step-content" id="step1Content">
+                <div class="section-title">🚴 Chọn xe bạn muốn mượn</div>
+                
+                <div class="bikes-grid" id="bikesGrid">
+                    <!-- Bikes will be dynamically generated -->
+                </div>
+
+                <div class="legend">
+                    <div class="legend-title">Chú thích:</div>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <div class="legend-dot available"></div>
+                            <span>Sẵn sàng</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot rented"></div>
+                            <span>Đang thuê</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot maintenance"></div>
+                            <span>Bảo trì</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Hủy bỏ</button>
+                    <button type="button" class="btn btn-primary" id="nextStep1Btn" disabled>Tiếp tục</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Scan Card -->
+            <div class="step-content hidden" id="step2Content">
+                <div class="section-title">💳 Quét thẻ để xác nhận</div>
+                
+                <div class="selected-bike-info">
+                    <div class="bike-preview">
+                        <div class="bike-icon">🚲</div>
+                        <div class="bike-details">
+                            <div class="bike-label">Xe đã chọn:</div>
+                            <div class="bike-number" id="selectedBikeNumber">--</div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-change-bike" id="changeBikeBtn">Đổi xe khác</button>
+                </div>
+
+                <div class="card-scanner">
+                    <div class="scanner-animation" id="scannerAnimation">
+                        <div class="scanner-icon">💳</div>
+                        <div class="scanner-waves">
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                        </div>
+                        <div class="scanner-text">Vui lòng quét thẻ của bạn</div>
+                    </div>
+
+                    <div class="card-info hidden" id="cardInfo">
+                        <div class="card-number">
+                            <span class="label">Số thẻ:</span>
+                            <span id="scannedCardNumber">--</span>
+                        </div>
+                        <div class="card-balance">
+                            <span class="label">Số dư:</span>
+                            <span id="scannedCardBalance">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demo: Simulate card scan -->
+                <div class="demo-controls">
+                    <div class="demo-title">Demo: Mô phỏng quét thẻ</div>
+                    <div class="demo-buttons">
+                        <button type="button" class="demo-btn" data-card="valid">Thẻ hợp lệ (đủ tiền)</button>
+                        <button type="button" class="demo-btn" data-card="insufficient">Thẻ thiếu tiền</button>
+                        <button type="button" class="demo-btn" data-card="invalid">Thẻ không hợp lệ</button>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" id="backStep2Btn">Quay lại</button>
+                    <button type="button" class="btn btn-primary" id="confirmRentBtn" disabled>Xác nhận thuê xe</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Take Bike -->
+            <div class="step-content hidden" id="step3Content">
+                <div class="unlock-success">
+                    <div class="success-icon-big">🔓</div>
+                    <div class="success-title">Đã mở khóa thành công!</div>
+                    
+                    <div class="countdown-container">
+                        <div class="countdown-label">Thời gian còn lại để lấy xe:</div>
+                        <div class="countdown-timer" id="countdownTimer">60</div>
+                        <div class="countdown-text">giây</div>
+                        
+                        <div class="countdown-progress">
+                            <div class="countdown-bar" id="countdownBar"></div>
+                        </div>
+                    </div>
+
+                    <div class="unlock-instruction">
+                        <div class="instruction-icon">👇</div>
+                        <div class="instruction-text">Vui lòng dắt xe ra khỏi ô trong vòng 60 giây</div>
+                    </div>
+
+                    <div class="rental-info">
+                        <div class="rental-row">
+                            <span>Số xe:</span>
+                            <span id="rentalBikeNumber">--</span>
+                        </div>
+                        <div class="rental-row">
+                            <span>Bắt đầu thuê:</span>
+                            <span id="rentalStartTime">--</span>
+                        </div>
+                        <div class="rental-row">
+                            <span>Giá thuê:</span>
+                            <span id="rentalPrice">5.000đ/giờ</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-full" id="confirmTakenBtn">Đã lấy xe</button>
+                </div>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div class="loading-overlay hidden" id="loadingOverlay">
+                <div class="spinner"></div>
+                <p>Đang xử lý...</p>
+            </div>
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="summary-card">
+                <div class="summary-title">Thông tin trạm</div>
+                <div class="station-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="availableBikes">--</div>
+                        <div class="stat-label">Xe sẵn sàng</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalBikes">--</div>
+                        <div class="stat-label">Tổng số xe</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-card" id="selectedBikeCard" style="display: none;">
+                <div class="summary-title">Xe đã chọn</div>
+                <div class="selected-summary">
+                    <div class="summary-bike-icon">🚲</div>
+                    <div class="summary-bike-info">
+                        <div class="summary-bike-number" id="summaryBikeNumber">--</div>
+                        <div class="summary-bike-status" id="summaryBikeStatus">Sẵn sàng</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">📋 Hướng dẫn mượn xe</div>
+                <div class="info-box-text">
+                    <strong>Bước 1:</strong> Chọn xe có trạng thái "Sẵn sàng" (màu xanh)<br>
+                    <strong>Bước 2:</strong> Quét thẻ của bạn vào máy đọc<br>
+                    <strong>Bước 3:</strong> Lấy xe ra trong vòng 60 giây<br>
+                    <strong>Lưu ý:</strong> Không lấy xe sẽ tự động hủy giao dịch
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">💰 Giá cả & Điều kiện</div>
+                <div class="info-box-text">
+                    • Phí thuê: <strong>5.000đ/giờ</strong><br>
+                    • Số dư tối thiểu: <strong>20.000đ</strong><br>
+                    • Thời gian tối đa: <strong>4 giờ/lần</strong><br>
+                    • Đặt cọc: <strong>50.000đ</strong> (hoàn trả khi trả xe)
+                </div>
+            </div>
+
+            <div class="info-box warning-box">
+                <div class="info-box-title">⚠️ Lưu ý quan trọng</div>
+                <div class="info-box-text">
+                    • Không chọn xe có màu đỏ (đang thuê)<br>
+                    • Không chọn xe có màu xám (bảo trì)<br>
+                    • Kiểm tra số dư thẻ trước khi thuê<br>
+                    • Hotline hỗ trợ: <strong>1900 1234</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio for alerts -->
+    <audio id="errorSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTcIF2m98OScTgwOUKzn8LhlHQU2jdTxz3ozBSh+zPLaizsKFF+45OumVBMJR6Hh8bxsIAQohM/y24k4CBdqvfDknE4MDlCs5/C4ZR0FNo3U8c96MwUofszy2os7ChRfuOTrplQTCUeh4fG8bCAEKITP8tyIOQcXar3w5JxODA5QrOfwuGUdBTaN1PHPejMFKH7M8tqLOwoUX7jk66ZUEwlHoeHxvGwgBCiEz/LciDkHF2q98OScTgwOUKzn8LhlHQU2jdTxz3ozBSh+zPLaizsKFF+45OumVBMJR6Hh8bxsIAQohM/y3Ig5BxdqvfDknE4MDlCs5/C4ZR0FNo3U8c96MwUofszy2os7ChRfuOTrplQTCUeh4fG8bCAEKITP8tyIOQcXar3w5JxODA5QrOfwuGUdBTaN1PHPejMFKH7M8tqLOwoUX7jk66ZUEwlHoeHxvGwgBCiEz/LciDkHF2q98OScTgwOUKzn8LhlHQU2jdTxz3ozBSh+zPLaizsKFF+45OumVBMJR6Hh8bxsIAQohM/y3Ig5BxdqvfDknE4MDlCs5/C4ZR0FNo3U8c96MwUofszy2os7ChRfuOTrplQTCUeh4fG8bCAEKITP8tyIOQcXar3w5JxODA5QrOfwuGUdBTaN1PHPejMFKH7M8tqLOwoUX7jk66ZUEwlHoeHxvGwgBCiEz/LciDkHF2q98OScTgwOUKzn8Lg=" type="audio/wav">
+    </audio>
+
+    <script src="js/muonxe.js"></script>
+</body>
+</html>

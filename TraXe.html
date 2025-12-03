@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trả Xe</title>
+    <link rel="stylesheet" href="css/traxe.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <div class="header">
+                <div class="header-icon">🅿️</div>
+                <div class="header-info">
+                    <h1>Trả Xe Tại Trạm</h1>
+                    <div class="station-name">Trạm Nguyễn Huệ</div>
+                </div>
+            </div>
+
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step-item active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Đưa xe vào ô</div>
+                </div>
+                <div class="step-item" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Quét thẻ</div>
+                </div>
+                <div class="step-item" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Thanh toán</div>
+                </div>
+            </div>
+
+            <!-- Alerts -->
+            <div class="alert alert-error" id="alertError">
+                <strong>⚠️ Lỗi:</strong> <span id="errorMessage"></span>
+            </div>
+
+            <div class="alert alert-warning" id="alertWarning">
+                <strong>⚠️ Cảnh báo:</strong> <span id="warningMessage"></span>
+            </div>
+
+            <div class="alert alert-info" id="alertInfo">
+                <strong>ℹ️ Thông báo:</strong> <span id="infoMessage"></span>
+            </div>
+
+            <div class="alert alert-success" id="alertSuccess">
+                <strong>✓ Thành công:</strong> <span id="successMessage"></span>
+            </div>
+
+            <!-- Step 1: Park Bike -->
+            <div class="step-content" id="step1Content">
+                <div class="section-title">🚲 Đưa xe vào ô trống</div>
+                
+                <div class="parking-slots">
+                    <div class="slot-item" data-slot="1">
+                        <div class="slot-icon">🚲</div>
+                        <div class="slot-number">Ô 01</div>
+                        <div class="slot-status occupied">Có xe</div>
+                    </div>
+                    <div class="slot-item" data-slot="2">
+                        <div class="slot-icon">📦</div>
+                        <div class="slot-number">Ô 02</div>
+                        <div class="slot-status empty">Trống</div>
+                    </div>
+                    <div class="slot-item" data-slot="3">
+                        <div class="slot-icon">🚲</div>
+                        <div class="slot-number">Ô 03</div>
+                        <div class="slot-status occupied">Có xe</div>
+                    </div>
+                    <div class="slot-item" data-slot="4">
+                        <div class="slot-icon">📦</div>
+                        <div class="slot-number">Ô 04</div>
+                        <div class="slot-status empty">Trống</div>
+                    </div>
+                </div>
+
+                <div class="sensor-check">
+                    <div class="sensor-icon" id="sensorIcon">📡</div>
+                    <div class="sensor-status" id="sensorStatus">Đang chờ xe...</div>
+                    <div class="sensor-detail" id="sensorDetail">Vui lòng đưa xe vào ô trống và đảm bảo xe khớp với khớp nối</div>
+                </div>
+
+                <!-- Demo: Simulate parking -->
+                <div class="demo-controls">
+                    <div class="demo-title">Demo: Mô phỏng đỗ xe</div>
+                    <div class="demo-buttons">
+                        <button type="button" class="demo-btn" data-action="correct">Đỗ xe đúng vị trí</button>
+                        <button type="button" class="demo-btn" data-action="wrong">Đỗ xe sai vị trí</button>
+                        <button type="button" class="demo-btn" data-action="reset">Reset</button>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Hủy bỏ</button>
+                    <button type="button" class="btn btn-primary" id="nextStep1Btn" disabled>Tiếp tục quét thẻ</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Scan Card -->
+            <div class="step-content hidden" id="step2Content">
+                <div class="section-title">💳 Quét thẻ để hoàn tất trả xe</div>
+                
+                <div class="parked-bike-info">
+                    <div class="info-icon">✓</div>
+                    <div class="info-text">
+                        <div class="info-label">Xe đã được đặt đúng vị trí</div>
+                        <div class="info-value">Ô 02 - Đã khóa an toàn</div>
+                    </div>
+                </div>
+
+                <div class="card-scanner">
+                    <div class="scanner-animation" id="scannerAnimation">
+                        <div class="scanner-icon">💳</div>
+                        <div class="scanner-waves">
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                        </div>
+                        <div class="scanner-text">Vui lòng quét thẻ của bạn</div>
+                    </div>
+
+                    <div class="card-info hidden" id="cardInfo">
+                        <div class="card-row">
+                            <span class="label">Số thẻ:</span>
+                            <span id="scannedCardNumber">--</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Loại thẻ:</span>
+                            <span id="scannedCardType">--</span>
+                        </div>
+                        <div class="card-row">
+                            <span class="label">Số dư:</span>
+                            <span id="scannedCardBalance">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demo: Simulate card scan -->
+                <div class="demo-controls">
+                    <div class="demo-title">Demo: Mô phỏng quét thẻ</div>
+                    <div class="demo-buttons">
+                        <button type="button" class="demo-btn" data-card="valid">Thẻ hợp lệ (đủ tiền)</button>
+                        <button type="button" class="demo-btn" data-card="insufficient">Thẻ thiếu tiền</button>
+                        <button type="button" class="demo-btn" data-card="error">Lỗi quét thẻ</button>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" id="backStep2Btn">Quay lại</button>
+                    <button type="button" class="btn btn-primary" id="calculateBtn" disabled>Tính tiền</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Payment -->
+            <div class="step-content hidden" id="step3Content">
+                <div class="payment-container">
+                    <div class="payment-header">
+                        <div class="payment-icon">🧾</div>
+                        <div class="payment-title">Chi tiết thanh toán</div>
+                    </div>
+
+                    <!-- Rental Details -->
+                    <div class="rental-details">
+                        <div class="detail-section">
+                            <div class="section-label">Thông tin thuê xe</div>
+                            <div class="detail-row">
+                                <span>Số xe:</span>
+                                <span id="paymentBikeNumber">B001</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Thời gian bắt đầu:</span>
+                                <span id="paymentStartTime">--</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Thời gian kết thúc:</span>
+                                <span id="paymentEndTime">--</span>
+                            </div>
+                            <div class="detail-row highlight">
+                                <span>Tổng thời gian:</span>
+                                <span id="paymentDuration">--</span>
+                            </div>
+                        </div>
+
+                        <!-- Cost Calculation -->
+                        <div class="detail-section">
+                            <div class="section-label">Tính phí</div>
+                            <div class="detail-row">
+                                <span>Đơn giá:</span>
+                                <span>5.000đ/giờ</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Phí thuê:</span>
+                                <span id="paymentBaseFee">--</span>
+                            </div>
+                            <div class="detail-row minimum-fee" id="minimumFeeRow" style="display: none;">
+                                <span>⚠️ Phí tối thiểu:</span>
+                                <span>2.000đ</span>
+                            </div>
+                        </div>
+
+                        <!-- Discount Section -->
+                        <div class="detail-section promo-section" id="promoSection" style="display: none;">
+                            <div class="section-label">🎁 Khuyến mãi</div>
+                            <div class="promo-input-group">
+                                <input type="text" class="promo-input" id="promoInput" placeholder="Nhập mã khuyến mãi">
+                                <button type="button" class="btn-apply-promo" id="applyPromoBtn">Áp dụng</button>
+                            </div>
+                            <div class="promo-message" id="promoMessage"></div>
+                            <div class="detail-row discount-row" id="discountRow" style="display: none;">
+                                <span>Giảm giá:</span>
+                                <span id="paymentDiscount">-0đ</span>
+                            </div>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="total-section">
+                            <div class="total-row original-price" id="originalPriceRow" style="display: none;">
+                                <span>Giá gốc:</span>
+                                <span id="paymentOriginalPrice">--</span>
+                            </div>
+                            <div class="total-row">
+                                <span>Tổng thanh toán:</span>
+                                <span id="paymentTotal">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn btn-secondary" id="backStep3Btn">Quay lại</button>
+                        <button type="button" class="btn btn-primary" id="confirmPaymentBtn">Xác nhận thanh toán</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Complete -->
+            <div class="step-content hidden" id="step4Content">
+                <div class="complete-container">
+                    <div class="success-animation">
+                        <div class="success-icon-big">✅</div>
+                        <div class="success-title">Trả xe thành công!</div>
+                        <div class="success-subtitle">Cảm ơn bạn đã sử dụng dịch vụ</div>
+                    </div>
+
+                    <div class="receipt">
+                        <div class="receipt-header">
+                            <div class="receipt-title">BIÊN LAI TRẢ XE</div>
+                            <div class="receipt-time" id="receiptTime">--</div>
+                        </div>
+
+                        <div class="receipt-body">
+                            <div class="receipt-row">
+                                <span>Số xe:</span>
+                                <span id="receiptBikeNumber">--</span>
+                            </div>
+                            <div class="receipt-row">
+                                <span>Số thẻ:</span>
+                                <span id="receiptCardNumber">--</span>
+                            </div>
+                            <div class="receipt-row">
+                                <span>Thời gian thuê:</span>
+                                <span id="receiptDuration">--</span>
+                            </div>
+                            <div class="receipt-row">
+                                <span>Phí thuê:</span>
+                                <span id="receiptFee">--</span>
+                            </div>
+                            <div class="receipt-row discount" id="receiptDiscountRow" style="display: none;">
+                                <span>Giảm giá:</span>
+                                <span id="receiptDiscount">--</span>
+                            </div>
+                            <div class="receipt-total">
+                                <span>Tổng thanh toán:</span>
+                                <span id="receiptTotal">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-full" id="finishBtn">Hoàn tất</button>
+                </div>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div class="loading-overlay hidden" id="loadingOverlay">
+                <div class="spinner"></div>
+                <p>Đang xử lý...</p>
+            </div>
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="summary-card">
+                <div class="summary-title">Thông tin trạm</div>
+                <div class="station-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Ô trống</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">16</div>
+                        <div class="stat-label">Tổng số ô</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-card" id="feePreviewCard" style="display: none;">
+                <div class="summary-title">Dự kiến phí</div>
+                <div class="fee-preview">
+                    <div class="fee-row">
+                        <span>Thời gian thuê:</span>
+                        <span id="previewDuration">--</span>
+                    </div>
+                    <div class="fee-row">
+                        <span>Dự kiến phí:</span>
+                        <span id="previewFee" class="fee-amount">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">📋 Hướng dẫn trả xe</div>
+                <div class="info-box-text">
+                    <strong>Bước 1:</strong> Đưa xe vào ô trống và đảm bảo xe khớp với khớp nối<br>
+                    <strong>Bước 2:</strong> Quét thẻ đã dùng khi thuê xe<br>
+                    <strong>Bước 3:</strong> Kiểm tra chi phí và xác nhận thanh toán<br>
+                    <strong>Lưu ý:</strong> Phí tối thiểu 2.000đ cho mỗi lần thuê
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">💰 Bảng giá</div>
+                <div class="info-box-text">
+                    • Giá thuê: <strong>5.000đ/giờ</strong><br>
+                    • Phí tối thiểu: <strong>2.000đ</strong><br>
+                    • Đặt cọc: <strong>50.000đ</strong> (hoàn trả)<br>
+                    • Phí quá giờ: <strong>10.000đ/giờ</strong>
+                </div>
+            </div>
+
+            <div class="info-box promo-info">
+                <div class="info-box-title">🎁 Khuyến mãi</div>
+                <div class="info-box-text">
+                    • <strong>SAVE10:</strong> Giảm 10%<br>
+                    • <strong>FIRST20:</strong> Giảm 20% lần đầu<br>
+                    • <strong>FREE2K:</strong> Miễn phí 2.000đ
+                </div>
+            </div>
+
+            <div class="info-box warning-box">
+                <div class="info-box-title">⚠️ Lưu ý quan trọng</div>
+                <div class="info-box-text">
+                    • Đảm bảo xe khớp đúng vị trí trước khi quét thẻ<br>
+                    • Kiểm tra số dư thẻ trước khi trả xe<br>
+                    • Nạp tiền nếu không đủ thanh toán<br>
+                    • Hotline: <strong>1900 1234</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio for alerts -->
+    <audio id="errorSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTcIF2m98OScTgwOUKzn8LhlHQU2jdTxz3ozBSh+zPLaizsKFF+45OumVBMJR6Hh8bxsIAQohM/y24k4CBdqvfDknE4MDlCs5/C4ZR0FNo3U8c96MwUofszy2os7ChRfuOTrplQTCUeh4fG8bCAEKITP8tyIOQcXar3w5JxODA5QrOfwuGUdBTaN1PHPejMFKH7M8tqLOwoUX7jk66ZUEwlHoeHxvGwgBCiEz/LciDkHF2q98OScTgwOUKzn8LhlHQU2jdTxz3ozBSh+zPLaizsKFF+45OumVBMJR6Hh8bxsIAQohM/y3Ig5BxdqvfDknE4MDlCs5/C4ZR0FNo3U8c96MwUofszy2os7ChRfuOTrplQTCUeh4fG8bCAEKITP8tyIOQcXar3w5JxODA5QrOfwuGUdBTaN1PHPejMFKH7M8tqLOwoUX7jk66ZUEwlHoeHxvGwgBCiEz/LciDkHF2q98OScTgwOUKzn8LhlHQU2jdTxz3ozBSh+zPLaizsKFF+45OumVBMJR6Hh8bxsIAQohM/y3Ig5BxdqvfDknE4MDlCs5/C4ZR0FNo3U8c96MwUofszy2os7ChRfuOTrplQTCUeh4fG8bCAEKITP8tyIOQcXar3w5JxODA5QrOfwuGUdBTaN1PHPejMFKH7M8tqLOwoUX7jk66ZUEwlHoeHxvGwgBCiEz/LciDkHF2q98OScTgwOUKzn8Lg=" type="audio/wav">
+    </audio>
+
+    <script src="js/traxe.js"></script>
+</body>
+</html>

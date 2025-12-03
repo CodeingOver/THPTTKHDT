@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nạp Tiền Vào Thẻ</title>
+    <link rel="stylesheet" href="css/naptien.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <div class="header">
+                <div class="header-icon">💳</div>
+                <h1>Nạp Tiền Vào Thẻ</h1>
+            </div>
+
+            <!-- Thông báo khóa tài khoản -->
+            <div class="locked-message" id="lockedMessage">
+                <h3>🔒 Tài khoản tạm khóa</h3>
+                <p>Bạn đã thực hiện giao dịch thất bại quá 3 lần. Vui lòng thử lại sau <strong><span id="lockTimer">60:00</span></strong></p>
+            </div>
+
+            <!-- Thông tin thẻ và số dư -->
+            <div class="card-status" id="cardStatus">
+                <div class="card-number" id="cardNumber">**** **** **** ****</div>
+                <div class="balance-label">Số dư hiện tại</div>
+                <div class="balance-amount" id="currentBalance">0 đ</div>
+            </div>
+
+            <!-- Thông báo lỗi/thành công -->
+            <div class="alert alert-error" id="alertError">
+                <strong>⚠️ Lỗi:</strong> <span id="errorMessage"></span>
+            </div>
+
+            <div class="alert alert-warning" id="alertWarning">
+                <strong>⚠️ Cảnh báo:</strong> <span id="warningMessage"></span>
+            </div>
+
+            <div class="alert alert-info" id="alertInfo">
+                <strong>ℹ️ Thông báo:</strong> <span id="infoMessage"></span>
+            </div>
+
+            <!-- Form nạp tiền -->
+            <form id="topupForm">
+                <div class="form-group">
+                    <label class="section-title">💰 Chọn mệnh giá</label>
+                    <div class="amount-options">
+                        <button type="button" class="amount-btn" data-amount="50000">50.000đ</button>
+                        <button type="button" class="amount-btn" data-amount="100000">100.000đ</button>
+                        <button type="button" class="amount-btn" data-amount="200000">200.000đ</button>
+                        <button type="button" class="amount-btn" data-amount="300000">300.000đ</button>
+                        <button type="button" class="amount-btn" data-amount="500000">500.000đ</button>
+                        <button type="button" class="amount-btn" data-amount="1000000">1.000.000đ</button>
+                    </div>
+                    <input type="number" class="input-field" id="customAmount" placeholder="Hoặc nhập số tiền khác (tối thiểu 10.000đ)" min="10000" step="10000">
+                </div>
+
+                <!-- Mã khuyến mãi -->
+                <div class="promo-section">
+                    <label class="section-title">🎁 Mã khuyến mãi</label>
+                    <div class="promo-input-group">
+                        <input type="text" class="input-field" id="promoCode" placeholder="Nhập mã khuyến mãi (nếu có)">
+                        <button type="button" class="apply-btn" id="applyPromoBtn">Áp dụng</button>
+                    </div>
+                    <div class="promo-message" id="promoMessage"></div>
+                </div>
+
+                <!-- Loading -->
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Đang xử lý giao dịch...</p>
+                </div>
+
+                <!-- Nút hành động -->
+                <div class="button-group" id="actionButtons">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Xác nhận nạp tiền</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="summary-card">
+                <div class="summary-title">Chi tiết giao dịch</div>
+                <div class="total-section">
+                    <div class="total-row">
+                        <span>Số tiền nạp:</span>
+                        <span id="displayAmount">0đ</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Khuyến mãi:</span>
+                        <span id="displayPromo">0đ</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Tổng nhận:</span>
+                        <span id="displayTotal">0đ</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">🎯 Mã khuyến mãi đang có</div>
+                <div class="info-box-text">
+                    • <strong>WELCOME100:</strong> Tặng 100K (nạp từ 200K)<br>
+                    • <strong>DISCOUNT10:</strong> Giảm 10% tổng tiền<br>
+                    • <strong>BONUS50K:</strong> Tặng 50K (nạp từ 100K)
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">📌 Lưu ý quan trọng</div>
+                <div class="info-box-text">
+                    • Số tiền nạp tối thiểu: 10.000đ<br>
+                    • Giao dịch thất bại 3 lần sẽ tạm khóa 1 giờ<br>
+                    • Vui lòng kiểm tra kết nối Internet ổn định<br>
+                    • Liên hệ hotline: <strong>1900 1234</strong> nếu cần hỗ trợ
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/naptien.js"></script>
+</body>
+</html>

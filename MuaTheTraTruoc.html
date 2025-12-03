@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mua Thẻ Trả Trước</title>
+    <link rel="stylesheet" href="css/muathe.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <div class="header">
+                <div class="header-icon">🎫</div>
+                <h1>Mua Thẻ Trả Trước</h1>
+            </div>
+
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Chọn loại thẻ</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Nạp tiền</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Hoàn tất</div>
+                </div>
+            </div>
+
+            <!-- Alerts -->
+            <div class="alert alert-error" id="alertError">
+                <strong>⚠️ Lỗi:</strong> <span id="errorMessage"></span>
+            </div>
+
+            <div class="alert alert-warning" id="alertWarning">
+                <strong>⚠️ Cảnh báo:</strong> <span id="warningMessage"></span>
+            </div>
+
+            <div class="alert alert-info" id="alertInfo">
+                <strong>ℹ️ Thông báo:</strong> <span id="infoMessage"></span>
+            </div>
+
+            <div class="alert alert-success" id="alertSuccess">
+                <strong>✓ Thành công:</strong> <span id="successMessage"></span>
+            </div>
+
+            <!-- Step 1: Choose Card Type -->
+            <div class="step-content" id="step1Content">
+                <div class="section-title">🎫 Chọn loại thẻ</div>
+                
+                <div class="card-types">
+                    <div class="card-type-item" data-type="prepaid">
+                        <div class="card-type-icon">💳</div>
+                        <div class="card-type-name">Thẻ trả trước</div>
+                        <div class="card-type-desc">Nạp tiền và sử dụng</div>
+                        <div class="card-type-badge recommended">Khuyến nghị</div>
+                    </div>
+                    
+                    <div class="card-type-item" data-type="hourly">
+                        <div class="card-type-icon">⏱️</div>
+                        <div class="card-type-name">Thẻ theo giờ</div>
+                        <div class="card-type-desc">Tính phí theo thời gian</div>
+                    </div>
+                    
+                    <div class="card-type-item" data-type="monthly">
+                        <div class="card-type-icon">📅</div>
+                        <div class="card-type-name">Thẻ theo tháng</div>
+                        <div class="card-type-desc">Trọn gói hàng tháng</div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" id="cancelStep1Btn">Hủy bỏ</button>
+                    <button type="button" class="btn btn-primary" id="nextStep1Btn" disabled>Tiếp tục</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Insert Money -->
+            <div class="step-content hidden" id="step2Content">
+                <div class="section-title">💵 Nạp tiền mặt</div>
+                
+                <div class="selected-card-info">
+                    <div class="info-label">Loại thẻ đã chọn:</div>
+                    <div class="info-value" id="selectedCardType">Thẻ trả trước</div>
+                    <button type="button" class="btn-change" id="changeCardTypeBtn">Thay đổi</button>
+                </div>
+
+                <div class="money-detector">
+                    <div class="detector-status" id="detectorStatus">
+                        <div class="detector-icon">💴</div>
+                        <div class="detector-text">Vui lòng đưa tiền vào khe nạp tiền</div>
+                    </div>
+                    
+                    <div class="money-display">
+                        <div class="money-label">Số tiền đã nạp:</div>
+                        <div class="money-amount" id="insertedAmount">0đ</div>
+                    </div>
+
+                    <div class="minimum-notice">
+                        <strong>Lưu ý:</strong> Số tiền nạp tối thiểu là 1.000.000đ
+                    </div>
+                </div>
+
+                <!-- Simulate money insertion buttons (for demo) -->
+                <div class="demo-controls">
+                    <div class="demo-title">Demo: Mô phỏng nạp tiền</div>
+                    <div class="demo-buttons">
+                        <button type="button" class="demo-btn" data-amount="100000">100K</button>
+                        <button type="button" class="demo-btn" data-amount="200000">200K</button>
+                        <button type="button" class="demo-btn" data-amount="500000">500K</button>
+                        <button type="button" class="demo-btn" data-amount="1000000">1M</button>
+                        <button type="button" class="demo-btn btn-reset">Reset</button>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" id="backStep2Btn">Quay lại</button>
+                    <button type="button" class="btn btn-primary" id="nextStep2Btn" disabled>Xác nhận mua thẻ</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Complete -->
+            <div class="step-content hidden" id="step3Content">
+                <div class="success-container">
+                    <div class="success-icon">✅</div>
+                    <div class="success-title">Mua thẻ thành công!</div>
+                    
+                    <div class="card-output">
+                        <div class="card-visual">
+                            <div class="card-chip"></div>
+                            <div class="card-number" id="newCardNumber">**** **** **** ****</div>
+                            <div class="card-balance-label">Số dư khả dụng</div>
+                            <div class="card-balance" id="newCardBalance">0đ</div>
+                        </div>
+                        
+                        <div class="output-message">
+                            <div class="output-icon">👉</div>
+                            <div class="output-text">Vui lòng lấy thẻ của bạn</div>
+                        </div>
+                    </div>
+
+                    <div class="receipt-info">
+                        <div class="receipt-row">
+                            <span>Loại thẻ:</span>
+                            <span id="receiptCardType">Thẻ trả trước</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span>Số tiền nạp:</span>
+                            <span id="receiptAmount">0đ</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span>Thời gian:</span>
+                            <span id="receiptTime">--</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-full" id="finishBtn">Hoàn tất</button>
+                </div>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div class="loading-overlay hidden" id="loadingOverlay">
+                <div class="spinner"></div>
+                <p>Đang xử lý...</p>
+            </div>
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="summary-card">
+                <div class="summary-title">Thông tin giao dịch</div>
+                <div class="summary-content">
+                    <div class="summary-row">
+                        <span>Loại thẻ:</span>
+                        <span id="summaryCardType">--</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Số tiền nạp:</span>
+                        <span id="summaryAmount">0đ</span>
+                    </div>
+                    <div class="summary-row highlight">
+                        <span>Số dư thẻ:</span>
+                        <span id="summaryBalance">0đ</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">📋 Quy định mua thẻ</div>
+                <div class="info-box-text">
+                    • <strong>Thẻ trả trước:</strong> Nạp tối thiểu 1.000.000đ<br>
+                    • Thẻ có giá trị sử dụng không giới hạn<br>
+                    • Có thể nạp thêm tiền bất cứ lúc nào<br>
+                    • Số dư không bị mất khi hết hạn
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">💡 Lưu ý quan trọng</div>
+                <div class="info-box-text">
+                    • Kiểm tra kỹ tiền trước khi nạp<br>
+                    • Máy chỉ nhận tiền mệnh giá lớn<br>
+                    • Giữ biên nhận để đối chiếu<br>
+                    • Hotline hỗ trợ: <strong>1900 1234</strong>
+                </div>
+            </div>
+
+            <div class="info-box warning-box">
+                <div class="info-box-title">⚠️ Cảnh báo</div>
+                <div class="info-box-text">
+                    Chỉ chọn <strong>THẺ TRẢ TRƯỚC</strong> để tiếp tục giao dịch. Chọn sai loại thẻ sẽ cần quay lại bước đầu.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/muathe.js"></script>
+</body>
+</html>

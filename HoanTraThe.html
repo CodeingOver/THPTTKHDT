@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoàn Trả Thẻ</title>
+    <link rel="stylesheet" href="css/hoantrathe.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <div class="header">
+                <div class="header-icon">💳</div>
+                <div class="header-info">
+                    <h1>Hoàn Trả Thẻ</h1>
+                    <div class="station-name">Trạm Nguyễn Huệ</div>
+                </div>
+            </div>
+
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step-item active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Quét thẻ</div>
+                </div>
+                <div class="step-item" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Xác nhận</div>
+                </div>
+                <div class="step-item" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Hoàn tất</div>
+                </div>
+            </div>
+
+            <!-- Alerts -->
+            <div class="alert alert-error" id="alertError">
+                <strong>⚠️ Lỗi:</strong> <span id="errorMessage"></span>
+            </div>
+
+            <div class="alert alert-warning" id="alertWarning">
+                <strong>⚠️ Cảnh báo:</strong> <span id="warningMessage"></span>
+            </div>
+
+            <div class="alert alert-info" id="alertInfo">
+                <strong>ℹ️ Thông báo:</strong> <span id="infoMessage"></span>
+            </div>
+
+            <div class="alert alert-success" id="alertSuccess">
+                <strong>✓ Thành công:</strong> <span id="successMessage"></span>
+            </div>
+
+            <!-- Step 1: Scan Card -->
+            <div class="step-content" id="step1Content">
+                <div class="section-title">💳 Quét thẻ để hoàn trả</div>
+                
+                <div class="card-scanner">
+                    <div class="scanner-animation" id="scannerAnimation">
+                        <div class="scanner-icon">💳</div>
+                        <div class="scanner-waves">
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                        </div>
+                        <div class="scanner-text">Vui lòng đưa thẻ vào khe đọc thẻ</div>
+                    </div>
+
+                    <div class="card-info hidden" id="cardInfo">
+                        <div class="card-visual">
+                            <div class="card-chip">💳</div>
+                            <div class="card-details">
+                                <div class="card-number" id="displayCardNumber">•••• •••• •••• ••••</div>
+                                <div class="card-holder">Thẻ thuê xe</div>
+                            </div>
+                        </div>
+
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Số thẻ</div>
+                                <div class="info-value" id="cardNumber">--</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Loại thẻ</div>
+                                <div class="info-value" id="cardType">--</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Số dư hiện tại</div>
+                                <div class="info-value highlight" id="cardBalance">--</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Trạng thái</div>
+                                <div class="info-value" id="cardStatus">--</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rental Status Check -->
+                <div class="rental-status hidden" id="rentalStatus">
+                    <div class="status-header">
+                        <div class="status-icon" id="rentalIcon">🚲</div>
+                        <div class="status-text">
+                            <div class="status-title" id="rentalTitle">Trạng thái thuê xe</div>
+                            <div class="status-subtitle" id="rentalSubtitle">Đang kiểm tra...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demo: Simulate card scan -->
+                <div class="demo-controls">
+                    <div class="demo-title">Demo: Mô phỏng quét thẻ</div>
+                    <div class="demo-buttons">
+                        <button type="button" class="demo-btn" data-card="prepaid-ok">Thẻ trả trước (OK)</button>
+                        <button type="button" class="demo-btn" data-card="postpaid-ok">Thẻ trả sau (OK)</button>
+                        <button type="button" class="demo-btn" data-card="has-rental">Đang mượn xe</button>
+                        <button type="button" class="demo-btn" data-card="negative">Số dư âm</button>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" id="cancelStep1Btn">Hủy bỏ</button>
+                    <button type="button" class="btn btn-primary" id="nextStep1Btn" disabled>Tiếp tục</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Confirm Return -->
+            <div class="step-content hidden" id="step2Content">
+                <div class="section-title">📋 Xác nhận hoàn trả thẻ</div>
+
+                <div class="confirmation-container">
+                    <!-- Card Summary -->
+                    <div class="summary-box">
+                        <div class="summary-header">
+                            <div class="summary-icon">💳</div>
+                            <div class="summary-title">Thông tin thẻ</div>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-row">
+                                <span>Số thẻ:</span>
+                                <span id="confirmCardNumber">--</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Loại thẻ:</span>
+                                <span id="confirmCardType">--</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Số dư hiện tại:</span>
+                                <span id="confirmCardBalance" class="highlight">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Refund Calculation (for prepaid cards) -->
+                    <div class="refund-box hidden" id="refundBox">
+                        <div class="refund-header">
+                            <div class="refund-icon">💰</div>
+                            <div class="refund-title">Chi tiết hoàn tiền</div>
+                        </div>
+                        <div class="refund-content">
+                            <div class="refund-row">
+                                <span>Số dư thẻ:</span>
+                                <span id="refundBalance">--</span>
+                            </div>
+                            <div class="refund-row">
+                                <span>Tiền cọc (nếu có):</span>
+                                <span id="refundDeposit">--</span>
+                            </div>
+                            <div class="refund-total">
+                                <span>Tổng tiền hoàn về:</span>
+                                <span id="refundTotal">--</span>
+                            </div>
+                            <div class="refund-note">
+                                <strong>Lưu ý:</strong> Số tiền sẽ được hoàn về tài khoản ngân hàng liên kết trong vòng 1-3 ngày làm việc.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- No Refund Notice (for postpaid cards) -->
+                    <div class="no-refund-box hidden" id="noRefundBox">
+                        <div class="no-refund-content">
+                            <div class="no-refund-icon">ℹ️</div>
+                            <div class="no-refund-text">
+                                <strong>Thẻ trả sau:</strong> Không có số dư để hoàn trả. Thẻ sẽ được reset và vô hiệu hóa sau khi xác nhận.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Warning Box -->
+                    <div class="warning-box">
+                        <div class="warning-icon">⚠️</div>
+                        <div class="warning-content">
+                            <div class="warning-title">Lưu ý quan trọng</div>
+                            <div class="warning-text">
+                                • Sau khi hoàn trả, thẻ sẽ bị <strong>vô hiệu hóa</strong> và không thể sử dụng để thuê xe nữa<br>
+                                • Mọi liên kết với tài khoản sẽ bị <strong>xóa</strong><br>
+                                • Thao tác này <strong>không thể hoàn tác</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confirmation Checkbox -->
+                    <div class="checkbox-container">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="confirmCheckbox">
+                            <span>Tôi đã đọc và xác nhận hoàn trả thẻ. Tôi hiểu rằng thẻ sẽ bị vô hiệu hóa sau thao tác này.</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" id="backStep2Btn">Quay lại</button>
+                    <button type="button" class="btn btn-primary btn-danger" id="confirmReturnBtn" disabled>Xác nhận hoàn trả</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Complete -->
+            <div class="step-content hidden" id="step3Content">
+                <div class="complete-container">
+                    <div class="success-animation">
+                        <div class="success-icon-big">✅</div>
+                        <div class="success-title">Hoàn trả thẻ thành công!</div>
+                        <div class="success-subtitle">Thẻ đã được vô hiệu hóa</div>
+                    </div>
+
+                    <!-- Receipt -->
+                    <div class="receipt">
+                        <div class="receipt-header">
+                            <div class="receipt-title">BIÊN LAI HOÀN TRẢ THẺ</div>
+                            <div class="receipt-time" id="receiptTime">--</div>
+                        </div>
+
+                        <div class="receipt-body">
+                            <div class="receipt-row">
+                                <span>Mã giao dịch:</span>
+                                <span id="receiptTransactionId">--</span>
+                            </div>
+                            <div class="receipt-row">
+                                <span>Số thẻ:</span>
+                                <span id="receiptCardNumber">--</span>
+                            </div>
+                            <div class="receipt-row">
+                                <span>Loại thẻ:</span>
+                                <span id="receiptCardType">--</span>
+                            </div>
+                            <div class="receipt-row refund-row" id="receiptRefundRow" style="display: none;">
+                                <span>Số tiền hoàn trả:</span>
+                                <span id="receiptRefundAmount">--</span>
+                            </div>
+                            <div class="receipt-status">
+                                <span>Trạng thái thẻ:</span>
+                                <span class="status-badge disabled">Đã vô hiệu hóa</span>
+                            </div>
+                        </div>
+
+                        <div class="receipt-footer">
+                            <p><strong>Lưu ý:</strong></p>
+                            <ul>
+                                <li>Thẻ này không còn có thể sử dụng để thuê xe</li>
+                                <li id="refundNoteText">Tiền hoàn trả sẽ về tài khoản trong 1-3 ngày làm việc</li>
+                                <li>Vui lòng giữ biên lai để đối chiếu</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="info-notice">
+                        <div class="info-notice-icon">ℹ️</div>
+                        <div class="info-notice-text">
+                            Nếu cần hỗ trợ hoặc có thắc mắc, vui lòng liên hệ:<br>
+                            <strong>Hotline: 1900 1234</strong> (24/7)
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-full" id="finishBtn">Hoàn tất</button>
+                </div>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div class="loading-overlay hidden" id="loadingOverlay">
+                <div class="spinner"></div>
+                <p id="loadingText">Đang xử lý...</p>
+            </div>
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="summary-card">
+                <div class="summary-title">Quy trình hoàn trả</div>
+                <div class="process-steps">
+                    <div class="process-step">
+                        <div class="process-number">1</div>
+                        <div class="process-text">Đưa thẻ vào khe đọc</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-number">2</div>
+                        <div class="process-text">Kiểm tra thông tin</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-number">3</div>
+                        <div class="process-text">Xác nhận hoàn trả</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-number">4</div>
+                        <div class="process-text">Nhận biên lai</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">📋 Điều kiện hoàn trả</div>
+                <div class="info-box-text">
+                    • <strong>Không còn xe đang thuê:</strong> Phải trả xe trước khi hoàn thẻ<br>
+                    • <strong>Thẻ trả trước:</strong> Số dư phải ≥ 0đ<br>
+                    • <strong>Thẻ trả sau:</strong> Không có phí chưa thanh toán<br>
+                    • <strong>Không có tranh chấp:</strong> Không có khiếu nại đang xử lý
+                </div>
+            </div>
+
+            <div class="info-box refund-info">
+                <div class="info-box-title">💰 Chính sách hoàn tiền</div>
+                <div class="info-box-text">
+                    <strong>Thẻ trả trước:</strong><br>
+                    • Hoàn lại toàn bộ số dư còn lại<br>
+                    • Hoàn lại tiền cọc (nếu có)<br>
+                    • Thời gian: 1-3 ngày làm việc<br><br>
+                    <strong>Thẻ trả sau:</strong><br>
+                    • Không có hoàn tiền<br>
+                    • Chỉ vô hiệu hóa thẻ
+                </div>
+            </div>
+
+            <div class="info-box warning-info">
+                <div class="info-box-title">⚠️ Lưu ý quan trọng</div>
+                <div class="info-box-text">
+                    • Thẻ sẽ bị <strong>vô hiệu hóa</strong> ngay sau khi hoàn trả<br>
+                    • Không thể hoàn tác sau khi xác nhận<br>
+                    • Phải làm thẻ mới nếu muốn sử dụng lại dịch vụ<br>
+                    • Phí làm thẻ mới: <strong>50.000đ</strong>
+                </div>
+            </div>
+
+            <div class="info-box support-info">
+                <div class="info-box-title">🆘 Hỗ trợ</div>
+                <div class="info-box-text">
+                    <strong>Hotline:</strong> 1900 1234<br>
+                    <strong>Email:</strong> support@bikeshare.vn<br>
+                    <strong>Giờ làm việc:</strong> 24/7<br>
+                    <strong>Website:</strong> www.bikeshare.vn
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio for alerts -->
+    <audio id="errorSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTcIF2m98OScTgwOUKzn8LhlHQU2jdTxz3ozBSh+zPLaizsKFF+45OumVBMJR6Hh8bxsIAQohM/y24k4CBdqvfDknE4MDlCs5/C4ZR0FNo3U8c96MwUofszy2os7ChRfuOTrplQTCUeh4fG8bCAEKITP8tyIOQcXar3w5JxODA5QrOfwuGUdBTaN1PHPejMFKH7M8tqLOwoUX7jk66ZUEwlHoeHxvGwgBCiEz/LciDkHF2q98OScTgwOUKzn8LhlHQU2jdTxz3ozBSh+zPLaizsKFF+45OumVBMJR6Hh8bxsIAQohM/y3Ig5BxdqvfDknE4MDlCs5/C4ZR0FNo3U8c96MwUofszy2os7ChRfuOTrplQTCUeh4fG8bCAEKITP8tyIOQcXar3w5JxODA5QrOfwuGUdBTaN1PHPejMFKH7M8tqLOwoUX7jk66ZUEwlHoeHxvGwgBCiEz/LciDkHF2q98OScTgwOUKzn8Lg=" type="audio/wav">
+    </audio>
+
+    <script src="js/hoantrathe.js"></script>
+</body>
+</html>
